@@ -3,9 +3,11 @@ package fr.afpa.pompey.cda22045.dao;
 import java.sql.Connection;
 import java.util.List;
 
+import fr.afpa.pompey.cda22045.exception.MonException;
+
 public abstract class DAO<T> {
 	
-	protected Connection connect = Singleton.getInstanceDB();
+	protected static Connection connect = Singleton.getInstanceDB();
 
 	/**
 	 * Méthode de création d'un objet T
@@ -32,13 +34,15 @@ public abstract class DAO<T> {
 	 * Méthode de recherche d'un objet T par son Identifiant
 	 * @param pId
 	 * @return l'objet T recherché
+	 * @throws MonException 
 	 */
-	public abstract T find(Integer pId);
+	public abstract T find(Integer pId) throws MonException;
 	
 	/**
 	 * Méthode de recherche de tout les objets T
 	 * @return la liste de tout les objets T
+	 * @throws MonException 
 	 */
-	public abstract List<T> findAll();
+	public abstract List<T> findAll() throws MonException;
 
 }
