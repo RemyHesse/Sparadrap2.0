@@ -10,7 +10,6 @@ public class Client extends Personne {
 	/**
 	 * 
 	 */
-	private int cliId;
 	private int mutId;
 	private Date cliDateNaiss;
 	private long cliNumSecu;
@@ -26,9 +25,8 @@ public class Client extends Personne {
 	 * @param pCliDateNaiss sa date de naissance
 	 * @param pCliNumSecu son numéro de sécurité sociale
 	 */
-	public Client(int cliId, String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail, int pMutId, Date pCliDateNaiss) throws MonException {
-		super(pPrenom,pNom,pAdresse,pTelephone,pEmail);
-		this.setCliId(cliId);
+	public Client(int perId, String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail, int pMutId, Date pCliDateNaiss) throws MonException {
+		super(perId,pPrenom,pNom,pAdresse,pTelephone,pEmail);
 		this.setMutId(pMutId);
 		this.setCliDateNaiss(pCliDateNaiss);
 	}
@@ -40,15 +38,7 @@ public class Client extends Personne {
 		this.setCliDateNaiss(pCliDateNaiss);
 	}
 	
-	
-	
-	public int getCliId() {
-		return cliId;
-	}
 
-	public void setCliId(int cliId) {
-		this.cliId = cliId;
-	}
 
 	public int getMutId() {
 		return mutId;
@@ -84,7 +74,7 @@ public class Client extends Personne {
 	@Override
 	public String toString() {
 		String mutNom = ClientDAO.getMutNom(mutId);
-		return "Client [cliId= " + cliId + " : " + super.toStringCli() + ", Mutuelle = " + mutNom + ", Date de Naissance " + cliDateNaiss + "]";
+		return "Client [cliId= " + getPerId() + " : " + super.toStringCli() + ", Mutuelle = " + mutNom + ", Date de Naissance " + cliDateNaiss + "]";
 	}
 	
 	

@@ -8,48 +8,44 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import fr.afpa.pompey.cda22045.exception.MonException;
-import fr.afpa.pompey.cda22045.metier.Client;
+import fr.afpa.pompey.cda22045.metier.Medecin;
 
 /**
  * 
  */
-public class ClientDAO extends DAO<Client>{
+public class MedecinDAO extends DAO<Medecin>{
 
-	
 	/**
 	 * 
 	 */
-	public ClientDAO() {
+	public MedecinDAO() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public boolean create(Client obj) {
-		// TODO Auto-generated method stub
-		
+	public boolean create(Medecin obj) {
 		Singleton.getInstanceDB();
 		
-		StringBuilder sqlInsertClient = new StringBuilder();
-		sqlInsertClient.append("insert into CLIENT ");
-		sqlInsertClient.append("(ADR_ID, CLI_NOM, CLI_PRENOM, CLI_TEL, CLI_EMAIL, MUT_ID, CLI_DATE_NAISS)" );
-		sqlInsertClient.append("values (?, ?, ?, ?, ?, ?, ?)");
+		StringBuilder sqlInsertMedecin = new StringBuilder();
+		sqlInsertMedecin.append("insert into MEDECIN ");
+		sqlInsertMedecin.append("(ADR_ID, MED_NOM, MED_PRENOM, MED_TEL, MED_EMAIL, MED_AGREMENT)" );
+		sqlInsertMedecin.append("values (?, ?, ?, ?, ?, ?)");
 		
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertClient.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				this.connect.prepareStatement(sqlInsertMedecin.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
-			preparedStatement.setInt(1,  obj.getAdresse() );
+			preparedStatement.setInt(1, obj.getAdresse());
 			preparedStatement.setString(2, obj.getNom());
 			preparedStatement.setString(3, obj.getPrenom());
 			preparedStatement.setString(4, obj.getTelephone());
 			preparedStatement.setString(5, obj.getEmail());
-			preparedStatement.setInt(6, obj.getMutId());
-			preparedStatement.setDate(7, obj.getCliDateNaiss());
+			preparedStatement.setInt(6, obj.getMedAgrement());
+
 			
 			
 			int rowCount = preparedStatement.executeUpdate();
@@ -73,15 +69,15 @@ public class ClientDAO extends DAO<Client>{
 	}
 
 	@Override
-	public boolean delete(Client obj) {
+	public boolean delete(Medecin obj) {
 		Singleton.getInstanceDB();
 		
-	    StringBuilder sqlDeleteClient = new StringBuilder();
-	    sqlDeleteClient.append("delete from CLIENT where CLI_ID = ?");
+	    StringBuilder sqlDeleteMedecin = new StringBuilder();
+	    sqlDeleteMedecin.append("delete from MEDECIN where MED_ID = ?");
 
 	    boolean requeteOk = false;
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlDeleteClient.toString())) {
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlDeleteMedecin.toString())) {
 	        preparedStatement.setInt(1, obj.getPerId());
 
 	        int rowCount = preparedStatement.executeUpdate();
@@ -99,25 +95,23 @@ public class ClientDAO extends DAO<Client>{
 	    return requeteOk;
 	}
 
-
 	@Override
-	public boolean update(Client obj) {
+	public boolean update(Medecin obj) {
 	    Singleton.getInstanceDB();
 
-	    StringBuilder sqlUpdateClient = new StringBuilder();
-	    sqlUpdateClient.append("update CLIENT set ADR_ID = ?, CLI_NOM = ?, CLI_PRENOM = ?, CLI_TEL = ?, CLI_EMAIL = ?,"
-	    		+ " MUT_ID = ?, CLI_DATE_NAISS = ? where CLI_ID = ?");
+	    StringBuilder sqlUpdateMedecin = new StringBuilder();
+	    sqlUpdateMedecin.append("update MEDECIN set ADR_ID = ?, MED_NOM = ?, MED_PRENOM = ?, MED_TEL = ?, MED_EMAIL = ?,"
+	    		+ " MED_AGREMENT = ? where MED_ID = ?");
 
 	    boolean requeteOk = false;
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateClient.toString())) {
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateMedecin.toString())) {
 	        preparedStatement.setInt(1, obj.getAdresse());
 	        preparedStatement.setString(2, obj.getNom());
 	        preparedStatement.setString(3, obj.getPrenom());
 	        preparedStatement.setString(4, obj.getTelephone());
 	        preparedStatement.setString(5, obj.getEmail());
-	        preparedStatement.setInt(6, obj.getMutId());
-	        preparedStatement.setDate(7, obj.getCliDateNaiss());
+	        preparedStatement.setInt(6, obj.getMedAgrement());
 	        preparedStatement.setInt(8, obj.getPerId()); // Assurez-vous d'avoir un getter pour l'ID du client (CLI_ID) dans la classe Client
 
 	        int rowCount = preparedStatement.executeUpdate();
@@ -135,34 +129,31 @@ public class ClientDAO extends DAO<Client>{
 	    return requeteOk;
 	}
 
-
 	@Override
-	public Client find(Integer perId) throws MonException {
-		
+	public Medecin find(Integer perId) throws MonException {
 		Singleton.getInstanceDB();
 		
-	    Client client = null;
+	    Medecin medecin = null;
 
-	    StringBuilder sqlSelectClient = new StringBuilder();
-	    sqlSelectClient.append("select * from CLIENT where CLI_ID = ?");
+	    StringBuilder sqlSelectMedecin = new StringBuilder();
+	    sqlSelectMedecin.append("select * from MEDECIN where MED_ID = ?");
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectClient.toString())) {
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectMedecin.toString())) {
 	        preparedStatement.setInt(1, perId);
 
 	        ResultSet resultSet = preparedStatement.executeQuery();
 
 	        if (resultSet.next()) {
 	           
-	            int clientId = resultSet.getInt("CLI_ID");
+	            int medecinID = resultSet.getInt("MED_ID");
 	            int adresseId = resultSet.getInt("ADR_ID");
-	            String nom = resultSet.getString("CLI_NOM");
-	            String prenom = resultSet.getString("CLI_PRENOM");
-	            String telephone = resultSet.getString("CLI_TEL");
-	            String email = resultSet.getString("CLI_EMAIL");
-	            int mutuelleId = resultSet.getInt("MUT_ID");
-	            Date dateNaissance = resultSet.getDate("CLI_DATE_NAISS");
+	            String nom = resultSet.getString("MED_NOM");
+	            String prenom = resultSet.getString("MED_PRENOM");
+	            String telephone = resultSet.getString("MED_TEL");
+	            String email = resultSet.getString("MED_EMAIL");
+	            int medAgrement = resultSet.getInt("MED_AGREMENT");
 
-	            client = new Client(clientId, prenom, nom, adresseId, telephone, email, mutuelleId, (java.sql.Date) dateNaissance);
+	            medecin = new Medecin(medecinID, prenom, nom, adresseId, telephone, email, medAgrement);
 	        }
 
 
@@ -171,32 +162,32 @@ public class ClientDAO extends DAO<Client>{
 	                + " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
 	    }
 
-	    return client;
+	    return medecin;
 	}
 
 	@Override
-	public List<Client> findAll() throws MonException {
+	public List<Medecin> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Client> clients = new ArrayList<>();
+	    List<Medecin> medecins = new ArrayList<>();
 
-	    StringBuilder sqlSelectAllClients = new StringBuilder();
-	    sqlSelectAllClients.append("select * from CLIENT");
+	    StringBuilder sqlSelectAllMedecins = new StringBuilder();
+	    sqlSelectAllMedecins.append("select * from MEDECIN");
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectAllClients.toString())) {
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectAllMedecins.toString())) {
 	        ResultSet resultSet = preparedStatement.executeQuery();
 
 	        while (resultSet.next()) {
-	            int clientId = resultSet.getInt("CLI_ID");
+	            int medId = resultSet.getInt("MED_ID");
 	            int adresseId = resultSet.getInt("ADR_ID");
-	            String nom = resultSet.getString("CLI_NOM");
-	            String prenom = resultSet.getString("CLI_PRENOM");
-	            String telephone = resultSet.getString("CLI_TEL");
-	            String email = resultSet.getString("CLI_EMAIL");
-	            int mutuelleId = resultSet.getInt("MUT_ID");
-	            Date dateNaissance = resultSet.getDate("CLI_DATE_NAISS");
+	            String nom = resultSet.getString("MED_NOM");
+	            String prenom = resultSet.getString("MED_PRENOM");
+	            String telephone = resultSet.getString("MED_TEL");
+	            String email = resultSet.getString("MED_EMAIL");
+	            int medAgrement = resultSet.getInt("MED_AGREMENT");
+	            
 
-	            Client client = new Client(clientId, nom, prenom, adresseId, telephone, email, mutuelleId, (java.sql.Date) dateNaissance);
-	            clients.add(client);
+	            Medecin medecin = new Medecin(medId, nom, prenom, adresseId, telephone, email, medAgrement);
+	            medecins.add(medecin);
 	        }
 
 
@@ -205,43 +196,19 @@ public class ClientDAO extends DAO<Client>{
 	                " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
 	    }
 
-	    return clients;
+	    return medecins;
 	}
-
-	// Méthode pour récupérer le nom de la mutuelle d'un client
-	public static String getMutNom(int mutId) {
-	    String mutNom = null;
-	    
-	    try {
-	        String sql = "select MUT_NOM from MUTUELLE where MUT_ID = ?";
-	        
-	        try (PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
-	            preparedStatement.setInt(1, mutId);
-	            ResultSet resultSet = preparedStatement.executeQuery();
-	            
-	            if (resultSet.next()) {
-	            	mutNom = resultSet.getString("MUT_NOM");
-	            }
-	        }
-	    } catch (SQLException sqle) {
-	        System.out.println("Erreur de relation avec la bdd : " + sqle.getMessage()
-	                + " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
-	    }
-	    
-	    return mutNom;
-	}
-
-	// Méthode pour récupérer l'adresse complète d'un client
-	public static String getCliAddresse(int adrID) {
-	    String clientAddress = null;
+	
+	public static String getMedAddresse(int adrID) {
+	    String medAddresse = "Aucune adresse connue";
 
 	    try {
 	        String sql = "select ADR.ADR_NUM, ADR.ADR_LIGNE1, ADR.ADR_COMPLEMENT, VIL.VIL_NOM, DEP.DEP_NOM " +
-	                     "from CLIENT CLI " +
-	                     "inner join ADRESSE ADR on CLI.ADR_ID = ADR.ADR_ID " +
+	                     "from MEDECIN MED " +
+	                     "inner join ADRESSE ADR on MED.ADR_ID = ADR.ADR_ID " +
 	                     "inner join VILLE VIL on ADR.VIL_ID = VIL.VIL_ID " +
 	                     "inner join DEPARTEMENT DEP on VIL.DEP_ID = DEP.DEP_ID " +
-	                     "where CLI.ADR_ID = ?";
+	                     "where MED.ADR_ID = ?";
 
 	        try (PreparedStatement preparedStatement = connect.prepareStatement(sql)) {
 	            preparedStatement.setInt(1, adrID);
@@ -254,7 +221,7 @@ public class ClientDAO extends DAO<Client>{
 	                String vilNom = resultSet.getString("VIL_NOM");
 	                String depNom = resultSet.getString("DEP_NOM");
 
-	                clientAddress = adrNum + " " + adrLigne1 + " " + adrComplement + ", " + vilNom + ", " + depNom;
+	                medAddresse = adrNum + " " + adrLigne1 + " " + adrComplement + ", " + vilNom + ", " + depNom;
 	            }
 	        }
 	    } catch (SQLException sqle) {
@@ -262,8 +229,7 @@ public class ClientDAO extends DAO<Client>{
 	                + " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
 	    }
 
-	    return clientAddress;
+	    return medAddresse;
 	}
 
-	
 }

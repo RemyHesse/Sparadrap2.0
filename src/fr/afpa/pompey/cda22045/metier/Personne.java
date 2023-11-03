@@ -15,7 +15,7 @@ public abstract class Personne {
 	/**
 	 * Attributs tous de type String sauf les clé étrangères type int
 	 */
-	private int perId;
+	protected int perId;
 	private String perPrenom;
 	private String perNom;
 	private int adrId;
@@ -46,13 +46,29 @@ public abstract class Personne {
 		this.setEmail(pEmail);
 	}
 
+	public Personne(int pPerId, String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail) throws MonException {
+		super();
+		this.setPerId(pPerId);
+		this.setPrenom(pPrenom);
+		this.setNom(pNom);
+		this.setAdresse(pAdresse);
+		this.setTelephone(pTelephone);
+		this.setEmail(pEmail);
+	}
+	
 	// -----------------------------------------
 	// Getters/Setters
+	
+	
 	
 	public int getPerId() {
 		return perId;
 	}
 	
+	public void setPerId(int perId) {
+		this.perId = perId;
+	}
+
 	// -
 	public String getPrenom() {
 		return perPrenom;
@@ -147,7 +163,7 @@ public abstract class Personne {
 	 */
 	public String toStringCli() {
 		
-		String cliAdresse = ClientDAO.getCliAddresse(this.getPerId());
+		String cliAdresse = ClientDAO.getCliAddresse(adrId);
 
 		return this.getPrenom() + " " + this.getNom() + " habite au " + cliAdresse + " " 
 				+ " Téléphone : " + this.getTelephone() + " E-Mail : " + this.getEmail();
@@ -162,6 +178,13 @@ public abstract class Personne {
 	public String toStringNom() {
 
 		return this.getPrenom() + " " + this.getNom();
+
+	}
+	
+	
+	public String toStringSansAdresse() {
+
+		return this.getPrenom() + " " + this.getNom() + ", " + this.getTelephone() + ", " + this.getEmail();
 
 	}
 
