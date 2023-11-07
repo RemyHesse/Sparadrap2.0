@@ -3,12 +3,12 @@
  */
 package fr.afpa.pompey.cda22045.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import fr.afpa.pompey.cda22045.exception.MonException;
@@ -49,7 +49,7 @@ public class ClientDAO extends DAO<Client>{
 			preparedStatement.setString(4, obj.getTelephone());
 			preparedStatement.setString(5, obj.getEmail());
 			preparedStatement.setInt(6, obj.getMutId());
-			preparedStatement.setDate(7, obj.getCliDateNaiss());
+			preparedStatement.setDate(7, Date.valueOf(obj.getCliDateNaiss()));
 			
 			
 			int rowCount = preparedStatement.executeUpdate();
@@ -117,8 +117,8 @@ public class ClientDAO extends DAO<Client>{
 	        preparedStatement.setString(4, obj.getTelephone());
 	        preparedStatement.setString(5, obj.getEmail());
 	        preparedStatement.setInt(6, obj.getMutId());
-	        preparedStatement.setDate(7, obj.getCliDateNaiss());
-	        preparedStatement.setInt(8, obj.getPerId()); // Assurez-vous d'avoir un getter pour l'ID du client (CLI_ID) dans la classe Client
+	        preparedStatement.setDate(7, Date.valueOf(obj.getCliDateNaiss()));
+	        preparedStatement.setInt(8, obj.getPerId()); 
 
 	        int rowCount = preparedStatement.executeUpdate();
 
@@ -162,7 +162,7 @@ public class ClientDAO extends DAO<Client>{
 	            int mutuelleId = resultSet.getInt("MUT_ID");
 	            Date dateNaissance = resultSet.getDate("CLI_DATE_NAISS");
 
-	            client = new Client(clientId, prenom, nom, adresseId, telephone, email, mutuelleId, (java.sql.Date) dateNaissance);
+	            client = new Client(clientId, prenom, nom, adresseId, telephone, email, mutuelleId, ((java.sql.Date) dateNaissance).toLocalDate());
 	        }
 
 
@@ -195,7 +195,7 @@ public class ClientDAO extends DAO<Client>{
 	            int mutuelleId = resultSet.getInt("MUT_ID");
 	            Date dateNaissance = resultSet.getDate("CLI_DATE_NAISS");
 
-	            Client client = new Client(clientId, nom, prenom, adresseId, telephone, email, mutuelleId, (java.sql.Date) dateNaissance);
+	            Client client = new Client(clientId, nom, prenom, adresseId, telephone, email, mutuelleId, ((java.sql.Date) dateNaissance).toLocalDate());
 	            clients.add(client);
 	        }
 

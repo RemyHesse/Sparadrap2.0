@@ -52,8 +52,29 @@ public class PersonneDAO extends DAO<Personne>{
 
 	@Override
 	public boolean delete(Personne obj) {
-		// TODO Auto-generated method stub
-		return false;
+		Singleton.getInstanceDB();
+		
+	    StringBuilder sqlDeletePersonne = new StringBuilder();
+	    sqlDeletePersonne.append("delete from PERSONNE where PER_ID = ?");
+
+	    boolean requeteOk = false;
+
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlDeletePersonne.toString())) {
+	        preparedStatement.setInt(1, obj.getPerId());
+
+	        int rowCount = preparedStatement.executeUpdate();
+
+	        if (rowCount > 0) {
+	            requeteOk = true;
+	        }
+
+
+	    } catch (SQLException sqle) {
+	        System.out.println("Erreur de relation avec la bdd : " + sqle.getMessage()
+	                + " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
+	    }
+
+	    return requeteOk;
 	}
 
 	@Override

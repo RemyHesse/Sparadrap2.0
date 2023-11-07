@@ -28,6 +28,32 @@ public class Medicament {
 		this.setMedPrix(pMedPrix);
 		this.setMedMiseEnService(pMedMiseEnService);
 	}
+	
+	
+	
+	
+	/**
+	 * @param medId
+	 * @param catId
+	 * @param medNom
+	 * @param medPrix
+	 * @param medMiseEnService
+	 */
+	public Medicament(int medId, int catId, String medNom, float medPrix, LocalDate medMiseEnService) {
+		super();
+		this.medId = medId;
+		this.catId = catId;
+		this.medNom = medNom;
+		this.medPrix = medPrix;
+		this.medMiseEnService = medMiseEnService;
+	}
+
+
+
+
+	public void setMedId(int medId) {
+		this.medId = medId;
+	}
 
 	/**
 	 * Getter de l'identifiant du médicament

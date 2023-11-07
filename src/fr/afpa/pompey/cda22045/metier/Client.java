@@ -1,6 +1,7 @@
 package fr.afpa.pompey.cda22045.metier;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import fr.afpa.pompey.cda22045.dao.ClientDAO;
 import fr.afpa.pompey.cda22045.exception.MonException;
@@ -11,7 +12,7 @@ public class Client extends Personne {
 	 * 
 	 */
 	private int mutId;
-	private Date cliDateNaiss;
+	private LocalDate cliDateNaiss;
 	private long cliNumSecu;
 	
 		
@@ -25,14 +26,14 @@ public class Client extends Personne {
 	 * @param pCliDateNaiss sa date de naissance
 	 * @param pCliNumSecu son numéro de sécurité sociale
 	 */
-	public Client(int perId, String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail, int pMutId, Date pCliDateNaiss) throws MonException {
+	public Client(int perId, String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail, int pMutId, LocalDate pCliDateNaiss) throws MonException {
 		super(perId,pPrenom,pNom,pAdresse,pTelephone,pEmail);
 		this.setMutId(pMutId);
 		this.setCliDateNaiss(pCliDateNaiss);
 	}
 
 
-	public Client(String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail, int pMutId, Date pCliDateNaiss) throws MonException {
+	public Client(String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail, int pMutId, LocalDate pCliDateNaiss) throws MonException {
 		super(pPrenom,pNom,pAdresse,pTelephone,pEmail);
 		this.setMutId(pMutId);
 		this.setCliDateNaiss(pCliDateNaiss);
@@ -54,11 +55,11 @@ public class Client extends Personne {
 		}
 	}
 
-	public Date getCliDateNaiss() {
+	public LocalDate getCliDateNaiss() {
 		return cliDateNaiss;
 	}
 
-	public void setCliDateNaiss(Date cliDateNaiss) {
+	public void setCliDateNaiss(LocalDate cliDateNaiss) {
 		this.cliDateNaiss = cliDateNaiss;
 	}
 

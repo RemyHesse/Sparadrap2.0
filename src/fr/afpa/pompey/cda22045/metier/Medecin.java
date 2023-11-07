@@ -30,9 +30,9 @@ public class Medecin extends Personne {
 	/**
 	 * @param pPerId
 	 */
-	public Medecin(int pPerId, String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail,
+	public Medecin(int pMedId, String pPrenom, String pNom, int pAdresse, String pTelephone, String pEmail,
 			int medAgrement) throws MonException {
-		super(pPerId, pPrenom, pNom, pAdresse, pTelephone, pEmail);
+		super(pMedId, pPrenom, pNom, pAdresse, pTelephone, pEmail);
 		this.setMedAgrement(medAgrement);
 	}
 
@@ -50,7 +50,10 @@ public class Medecin extends Personne {
 		return "Medecin [Numéro d'agrément = " + medAgrement + ", " + super.toStringSansAdresse() + ", réside au : " + medAdresse +" ]";
 	}
 	
-	
+	public String toStringNom() {
+		return "Dr " + getPrenom() + " " + getNom();
+		
+	}
 	
 	
 

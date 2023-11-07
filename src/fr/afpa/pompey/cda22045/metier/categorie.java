@@ -18,6 +18,24 @@ public class Categorie {
 	}
 	
 	/**
+	 * Constructeur complet
+	 * @param pCatId avec l'identifiant en plus.
+	 * @param pCatLabel
+	 * @throws MonException
+	 */
+	public Categorie(int pCatId,String pCatLabel) throws MonException {
+		this.setCatId(pCatId);
+		this.setCatLabel(pCatLabel);
+	}
+	
+	/**
+	 * Setter de l'identifiant d'une catégorie
+	 * @param catId son identifiant
+	 */
+	public void setCatId(int catId) {
+		this.catId = catId;
+	}
+	/**
 	 * Getter de l'identifiant d'une catégorie
 	 * @return son id
 	 */

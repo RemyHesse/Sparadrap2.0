@@ -3,8 +3,14 @@
  */
 package fr.afpa.pompey.cda22045.principale;
 
+import java.awt.EventQueue;
+
+import javax.swing.UIManager;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+
 import fr.afpa.pompey.cda22045.dao.Singleton;
 import fr.afpa.pompey.cda22045.exception.MonException;
+import fr.afpa.pompey.cda22045.frame.Accueil;
 import fr.afpa.pompey.cda22045.utilitaires.Debug;
 
 /**
@@ -28,8 +34,26 @@ public class Principale {
 	public static void main(String[] args) throws MonException {
 		// TODO Auto-generated method stub
 
+		// Application du thème Nimbus
+		try {
 
-		Debug debug = new Debug();
+			UIManager.setLookAndFeel(new NimbusLookAndFeel());
+
+		} catch (Exception e) {
+
+			System.out.println("Nimbus ne fonctionne pas sur cet OS");
+
+		}
+//		Debug debug = new Debug();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Accueil accueil = new Accueil();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		
 		
@@ -37,8 +61,7 @@ public class Principale {
 		
 		
 		
-		
-        Singleton.closeInstanceDB();	
+//        Singleton.closeInstanceDB();	
 		
 
 	}

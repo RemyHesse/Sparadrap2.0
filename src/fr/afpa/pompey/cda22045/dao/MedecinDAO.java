@@ -53,8 +53,8 @@ public class MedecinDAO extends DAO<Medecin>{
 	        if (rowCount > 0) {
 	            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 	            if (generatedKeys.next()) {
-	                int generatedCliId = generatedKeys.getInt(1);
-	                obj.setPerId(generatedCliId);
+	                int generatedMedId = generatedKeys.getInt(1);
+	                obj.setPerId(generatedMedId);
 	                requeteOk = true;
 	            }
 	        }
@@ -112,7 +112,7 @@ public class MedecinDAO extends DAO<Medecin>{
 	        preparedStatement.setString(4, obj.getTelephone());
 	        preparedStatement.setString(5, obj.getEmail());
 	        preparedStatement.setInt(6, obj.getMedAgrement());
-	        preparedStatement.setInt(8, obj.getPerId()); // Assurez-vous d'avoir un getter pour l'ID du client (CLI_ID) dans la classe Client
+	        preparedStatement.setInt(7, obj.getPerId()); 
 
 	        int rowCount = preparedStatement.executeUpdate();
 
@@ -231,5 +231,45 @@ public class MedecinDAO extends DAO<Medecin>{
 
 	    return medAddresse;
 	}
+	
+	public String getMedSpecialite(int pMedId) {
+		String medSpecialite = "Aucune spécialité enregistrée";
+		
+		try {
+			String requeteSql = " select SPE.SPE_LABEL from SPECIALITE SPE"
+					+ "inner join SPECIALISTE SPEC on SPE.SPE_ID = SPEC.SPE_ID"
+					+ "inner join MEDECIN MED on SPEC.MED_ID = MED.MED_ID"
+					+ "where MED.MED_ID = ?";
+			
+			 try (PreparedStatement preparedStatement = connect.prepareStatement(requeteSql)) {
+		            preparedStatement.setInt(1, pMedId);
+		            ResultSet resultSet = preparedStatement.executeQuery();
+
+		            if (resultSet.next()) {
+		                medSpecialite = resultSet.getString("SPE_LABEL");
+		            }
+		        }
+		    } catch (SQLException sqle) {
+		        System.out.println("Erreur de relation avec la bdd : " + sqle.getMessage()
+		                + " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
+		    }
+		
+		return medSpecialite;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
