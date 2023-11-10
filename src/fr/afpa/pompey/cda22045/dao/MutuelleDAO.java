@@ -8,11 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import fr.afpa.pompey.cda22045.exception.MonException;
-import fr.afpa.pompey.cda22045.metier.Client;
 import fr.afpa.pompey.cda22045.metier.Mutuelle;
 
 /**
@@ -39,7 +35,7 @@ public class MutuelleDAO extends DAO<Mutuelle>{
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertMutuelle.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				MutuelleDAO.connect.prepareStatement(sqlInsertMutuelle.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
 			preparedStatement.setInt(1,  obj.getAdrId() );
 			preparedStatement.setString(2, obj.getMutNom());
@@ -160,9 +156,9 @@ public class MutuelleDAO extends DAO<Mutuelle>{
 	}
 
 	@Override
-	public List<Mutuelle> findAll() throws MonException {
+	public ArrayList<Mutuelle> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Mutuelle> mutuelles = new ArrayList<>();
+	    ArrayList<Mutuelle> mutuelles = new ArrayList<>();
 
 	    StringBuilder sqlSelectAllClients = new StringBuilder();
 	    sqlSelectAllClients.append("select * from MUTUELLE");

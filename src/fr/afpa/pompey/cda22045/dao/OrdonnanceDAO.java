@@ -9,10 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import fr.afpa.pompey.cda22045.exception.MonException;
-import fr.afpa.pompey.cda22045.metier.Categorie;
+import fr.afpa.pompey.cda22045.metier.Medicament;
 import fr.afpa.pompey.cda22045.metier.Ordonnance;
 
 /**
@@ -39,7 +37,7 @@ public class OrdonnanceDAO extends DAO<Ordonnance>{
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertOrdonnance.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				OrdonnanceDAO.connect.prepareStatement(sqlInsertOrdonnance.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
 			preparedStatement.setDate(1, Date.valueOf(obj.getOrdDate()));
 			
@@ -95,7 +93,7 @@ public class OrdonnanceDAO extends DAO<Ordonnance>{
 	    Singleton.getInstanceDB();
 
 	    StringBuilder sqlUpdateOrdonnance = new StringBuilder();
-	    sqlUpdateOrdonnance.append("update ORDONNANCE set ORD_LABEL = ?, where ORD_ID = ?");
+	    sqlUpdateOrdonnance.append("update ORDONNANCE set ORD_DATE = ?, where ORD_ID = ?");
 
 	    boolean requeteOk = false;
 
@@ -150,9 +148,9 @@ public class OrdonnanceDAO extends DAO<Ordonnance>{
 	}
 
 	@Override
-	public List<Ordonnance> findAll() throws MonException {
+	public ArrayList<Ordonnance> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Ordonnance> ordonnances = new ArrayList<>();
+	    ArrayList<Ordonnance> ordonnances = new ArrayList<>();
 
 	    StringBuilder sqlSelectAllSpecialites = new StringBuilder();
 	    sqlSelectAllSpecialites.append("select * from ORDONNANCE");
@@ -176,5 +174,125 @@ public class OrdonnanceDAO extends DAO<Ordonnance>{
 
 	    return ordonnances;
 	}
+	
+	public String getNomMedecin(Ordonnance obj) {
+		
+		String nomMedecin = null;
+		
+	    Singleton.getInstanceDB();
+
+	    StringBuilder sqlUpdateOrdonnance = new StringBuilder();
+	    sqlUpdateOrdonnance.append("select MED.MED_PRENOM, MED.MED_NOM from MEDECIN MED"
+	    		+ " join DELIVRE DEL on DEL.MED_ID = MED.MED_ID"
+	    		+ " join ORDONNANCE ORD on ORD.ORD_ID = DEL.ORD_ID"	    		
+	    		+ " where ORD.ORD_ID = ?");
+
+
+
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateOrdonnance.toString())) {
+	        preparedStatement.setInt(1, obj.getOrdId()); 
+
+	        ResultSet resultSet = preparedStatement.executeQuery();
+
+	        if (resultSet.next()) {
+                String medPrenom = resultSet.getString("MED_PRENOM");
+                String medNom = resultSet.getString("MED_NOM");
+                nomMedecin = "Dr " + medPrenom + " " + medNom;
+                return nomMedecin;
+	        }
+
+
+	    } catch (SQLException sqle) {
+	        System.out.println("Erreur de relation avec la bdd : " + sqle.getMessage() +
+	                " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
+	    }
+		
+		
+		return nomMedecin;
+		
+	}
+	
+	public String getNomClient(Ordonnance obj) {
+		
+		String nomClient = null;
+		
+	    Singleton.getInstanceDB();
+
+	    StringBuilder sqlUpdateOrdonnance = new StringBuilder();
+	    sqlUpdateOrdonnance.append("select CLI.CLI_PRENOM, CLI.CLI_NOM from CLIENT CLI"
+	    		+ " join DELIVRE DEL on DEL.CLI_ID = CLI.CLI_ID"
+	    		+ " join ORDONNANCE ORD on ORD.ORD_ID = DEL.ORD_ID"	    		
+	    		+ " where ORD.ORD_ID = ?");
+
+
+
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateOrdonnance.toString())) {
+	        preparedStatement.setInt(1, obj.getOrdId()); 
+
+	        ResultSet resultSet = preparedStatement.executeQuery();
+
+	        if (resultSet.next()) {
+                String cliPrenom = resultSet.getString("CLI_PRENOM");
+                String cliNom = resultSet.getString("CLI_NOM");
+                nomClient = cliPrenom + " " + cliNom;
+	        }
+
+
+	    } catch (SQLException sqle) {
+	        System.out.println("Erreur de relation avec la bdd : " + sqle.getMessage() +
+	                " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
+	    }
+				
+		return nomClient;
+		
+	}	
+	
+	
+	public ArrayList<Medicament> getListeMedoc(Ordonnance obj){
+		
+		ArrayList<Medicament> listeMedoc = new ArrayList<Medicament>();
+		
+	    StringBuilder sqlListeMedocParOrdo = new StringBuilder();
+	    sqlListeMedocParOrdo.append("select MED.MED_ID, MED.CAT_ID, MED.MED_NOM, MED.MED_PRIX, MED.MED_MISE_EN_SERVICE"
+	    		+ " from MEDICAMENT MED"
+	    		+ " join PRESCRIPTION PRE on PRE.MED_ID = MED.MED_ID"
+	    		+ " join ORDONNANCE ORD on ORD.ORD_ID = PRE.ORD_ID"
+	    		+ " where ORD.ORD_ID = ?");
+	    
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlListeMedocParOrdo.toString())) {
+	        preparedStatement.setInt(1, obj.getOrdId()); 
+
+	        ResultSet resultSet = preparedStatement.executeQuery();
+
+	        while (resultSet.next()) {
+	        	int medId = resultSet.getInt("MED_ID");
+	            int catId = resultSet.getInt("CAT_ID");
+	            String mednom = resultSet.getString("MED_NOM");
+	            float medPrix = resultSet.getFloat("MED_PRIX");
+	            Date medMiseEnService= resultSet.getDate("MED_MISE_EN_SERVICE");
+
+
+	            Medicament medicament = new Medicament(medId, catId, mednom, medPrix, medMiseEnService.toLocalDate());
+                
+                listeMedoc.add(medicament);
+	        }
+
+
+	    } catch (SQLException sqle) {
+	        System.out.println("Erreur de relation avec la bdd : " + sqle.getMessage() +
+	                " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
+	    }
+		
+		
+		return listeMedoc;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 
 }

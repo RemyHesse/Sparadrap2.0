@@ -48,6 +48,10 @@ public class Medicament {
 		this.medMiseEnService = medMiseEnService;
 	}
 
+	public Medicament() {
+		// TODO Auto-generated constructor stub
+	}
+
 
 
 

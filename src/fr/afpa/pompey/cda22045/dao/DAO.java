@@ -1,8 +1,7 @@
 package fr.afpa.pompey.cda22045.dao;
 
 import java.sql.Connection;
-import java.util.List;
-
+import java.util.ArrayList;
 import fr.afpa.pompey.cda22045.exception.MonException;
 import fr.afpa.pompey.cda22045.metier.Prescription;
 
@@ -48,7 +47,7 @@ public abstract class DAO<T> {
 	 * @return la liste de tout les objets T
 	 * @throws MonException 
 	 */
-	public abstract List<T> findAll() throws MonException;
+	public abstract ArrayList<T> findAll() throws MonException;
 
 	public Prescription find(Integer pOrdId, Integer pMedId) throws MonException {
 		// TODO Auto-generated method stub

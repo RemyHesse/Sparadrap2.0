@@ -3,16 +3,12 @@
  */
 package fr.afpa.pompey.cda22045.dao;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import fr.afpa.pompey.cda22045.exception.MonException;
-import fr.afpa.pompey.cda22045.metier.Ordonnance;
 import fr.afpa.pompey.cda22045.metier.Prescription;
 
 /**
@@ -39,7 +35,7 @@ public class PrescriptionDAO extends DAO<Prescription>{
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertPrescription.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				PrescriptionDAO.connect.prepareStatement(sqlInsertPrescription.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
 			preparedStatement.setInt(1, obj.getOrdId());
 			preparedStatement.setInt(2, obj.getMedId());
@@ -156,9 +152,9 @@ public class PrescriptionDAO extends DAO<Prescription>{
 	}
 
 	@Override
-	public List<Prescription> findAll() throws MonException {
+	public ArrayList<Prescription> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Prescription> prescriptions = new ArrayList<>();
+	    ArrayList<Prescription> prescriptions = new ArrayList<>();
 
 	    StringBuilder sqlSelectAllPrescriptions = new StringBuilder();
 	    sqlSelectAllPrescriptions.append("select * from PRESCRIPTION");

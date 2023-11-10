@@ -8,38 +8,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import fr.afpa.pompey.cda22045.exception.MonException;
-import fr.afpa.pompey.cda22045.metier.Categorie;
+import fr.afpa.pompey.cda22045.metier.Droit;
 
 /**
  * 
  */
-public class CategorieDAO extends DAO<Categorie> {
+public class DroitDAO extends DAO<Droit> {
 
 	/**
 	 * 
 	 */
-	public CategorieDAO() {
+	public DroitDAO() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public boolean create(Categorie obj) {
+	public boolean create(Droit obj) {
 		Singleton.getInstanceDB();
 		
-		StringBuilder sqlInsertCategorie = new StringBuilder();
-		sqlInsertCategorie.append("insert into CATEGORIE ");
-		sqlInsertCategorie.append("(CAT_LABEL)" );
-		sqlInsertCategorie.append("values (?)");
+		StringBuilder sqlInsertDroit = new StringBuilder();
+		sqlInsertDroit.append("insert into DROIT ");
+		sqlInsertDroit.append("(DRO_LABEL)" );
+		sqlInsertDroit.append("values (?)");
 		
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				CategorieDAO.connect.prepareStatement(sqlInsertCategorie.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				OrdonnanceDAO.connect.prepareStatement(sqlInsertDroit.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
-			preparedStatement.setString(1,  obj.getCatLabel() );
-
-			
+			preparedStatement.setString(1, obj.getDroLabel());
 			
 			int rowCount = preparedStatement.executeUpdate();
 
@@ -47,7 +46,7 @@ public class CategorieDAO extends DAO<Categorie> {
 	            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 	            if (generatedKeys.next()) {
 	                int generatedCliId = generatedKeys.getInt(1);
-	                obj.setCatId(generatedCliId);
+	                obj.setDroId(generatedCliId);
 	                requeteOk = true;
 	            }
 	        }
@@ -62,16 +61,16 @@ public class CategorieDAO extends DAO<Categorie> {
 	}
 
 	@Override
-	public boolean delete(Categorie obj) {
+	public boolean delete(Droit obj) {
 		Singleton.getInstanceDB();
 		
-	    StringBuilder sqlDeleteCategorie = new StringBuilder();
-	    sqlDeleteCategorie.append("delete from CATEGORIE where CAT_ID = ?");
+	    StringBuilder sqlDeleteDroit = new StringBuilder();
+	    sqlDeleteDroit.append("delete from DROIT where DRO_ID = ?");
 
 	    boolean requeteOk = false;
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlDeleteCategorie.toString())) {
-	        preparedStatement.setInt(1, obj.getCatId());
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlDeleteDroit.toString())) {
+	        preparedStatement.setInt(1, obj.getDroId());
 
 	        int rowCount = preparedStatement.executeUpdate();
 
@@ -89,17 +88,17 @@ public class CategorieDAO extends DAO<Categorie> {
 	}
 
 	@Override
-	public boolean update(Categorie obj) {
+	public boolean update(Droit obj) {
 	    Singleton.getInstanceDB();
 
-	    StringBuilder sqlUpdateCategorie = new StringBuilder();
-	    sqlUpdateCategorie.append("update CATEGORIE set CAT_LABEL = ?, where CAT_ID = ?");
+	    StringBuilder sqlUpdateDroit = new StringBuilder();
+	    sqlUpdateDroit.append("update DROIT set DRO_LABEL = ?, where DRO_ID = ?");
 
 	    boolean requeteOk = false;
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateCategorie.toString())) {
-	    	preparedStatement.setString(1,  obj.getCatLabel() );
-	        preparedStatement.setInt(2, obj.getCatId()); 
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateDroit.toString())) {
+	    	preparedStatement.setString(1, obj.getDroLabel() );
+	        preparedStatement.setInt(2, obj.getDroId()); 
 
 	        int rowCount = preparedStatement.executeUpdate();
 
@@ -117,25 +116,25 @@ public class CategorieDAO extends DAO<Categorie> {
 	}
 
 	@Override
-	public Categorie find(Integer pCatId) throws MonException {
+	public Droit find(Integer pId) throws MonException {
 		Singleton.getInstanceDB();
 		
-		Categorie categorie = null;
+		Droit droit = null;
 
-	    StringBuilder sqlSelectCategorie = new StringBuilder();
-	    sqlSelectCategorie.append("select * from CATEGORIE where CAT_ID = ?");
+	    StringBuilder sqlSelectDroit = new StringBuilder();
+	    sqlSelectDroit.append("select * from DROIT where DRO_ID = ?");
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectCategorie.toString())) {
-	        preparedStatement.setInt(1, pCatId);
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectDroit.toString())) {
+	        preparedStatement.setInt(1, pId);
 
 	        ResultSet resultSet = preparedStatement.executeQuery();
 
 	        if (resultSet.next()) {
 	           
-	            int catId = resultSet.getInt("CAT_ID");
-	            String catLabel = resultSet.getString("CAT_LABEL");
+	            int droId = resultSet.getInt("DRO_ID");
+	            String droLabel = resultSet.getString("DRO_LABEL");
 	            
-	            categorie = new Categorie(catId, catLabel);
+	            droit = new Droit(droId, droLabel);
 	        }
 
 
@@ -144,26 +143,26 @@ public class CategorieDAO extends DAO<Categorie> {
 	                + " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
 	    }
 
-	    return categorie;
+	    return droit;
 	}
 
 	@Override
-	public ArrayList<Categorie> findAll() throws MonException {
+	public ArrayList<Droit> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    ArrayList<Categorie> categories = new ArrayList<>();
+	    ArrayList<Droit> droits = new ArrayList<>();
 
-	    StringBuilder sqlSelectAllSpecialites = new StringBuilder();
-	    sqlSelectAllSpecialites.append("select * from CATEGORIE");
+	    StringBuilder sqlSelectAllDroit = new StringBuilder();
+	    sqlSelectAllDroit.append("select * from DROIT");
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectAllSpecialites.toString())) {
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectAllDroit.toString())) {
 	        ResultSet resultSet = preparedStatement.executeQuery();
 
 	        while (resultSet.next()) {
-	            int catId = resultSet.getInt("CAT_ID");
-	            String catLabel = resultSet.getString("CAT_LABEL");
+	        	int droId = resultSet.getInt("DRO_ID");
+	            String droLabel = resultSet.getString("DRO_LABEL");
 
-	            Categorie categorie = new Categorie(catId, catLabel);
-	            categories.add(categorie);
+	            Droit droit = new Droit(droId, droLabel);
+	            droits.add(droit);
 	        }
 
 
@@ -172,7 +171,7 @@ public class CategorieDAO extends DAO<Categorie> {
 	                " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
 	    }
 
-	    return categories;
+	    return droits;
 	}
 
 }

@@ -8,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import fr.afpa.pompey.cda22045.exception.MonException;
 import fr.afpa.pompey.cda22045.metier.Medecin;
 
@@ -37,7 +35,7 @@ public class MedecinDAO extends DAO<Medecin>{
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertMedecin.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				MedecinDAO.connect.prepareStatement(sqlInsertMedecin.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
 			preparedStatement.setInt(1, obj.getAdresse());
 			preparedStatement.setString(2, obj.getNom());
@@ -166,9 +164,9 @@ public class MedecinDAO extends DAO<Medecin>{
 	}
 
 	@Override
-	public List<Medecin> findAll() throws MonException {
+	public ArrayList<Medecin> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Medecin> medecins = new ArrayList<>();
+	    ArrayList<Medecin> medecins = new ArrayList<>();
 
 	    StringBuilder sqlSelectAllMedecins = new StringBuilder();
 	    sqlSelectAllMedecins.append("select * from MEDECIN");
@@ -186,7 +184,7 @@ public class MedecinDAO extends DAO<Medecin>{
 	            int medAgrement = resultSet.getInt("MED_AGREMENT");
 	            
 
-	            Medecin medecin = new Medecin(medId, nom, prenom, adresseId, telephone, email, medAgrement);
+	            Medecin medecin = new Medecin(medId, prenom, nom, adresseId, telephone, email, medAgrement);
 	            medecins.add(medecin);
 	        }
 

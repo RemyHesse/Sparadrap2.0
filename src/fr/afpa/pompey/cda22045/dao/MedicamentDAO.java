@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import fr.afpa.pompey.cda22045.exception.MonException;
 import fr.afpa.pompey.cda22045.metier.Medicament;
 
@@ -38,7 +36,7 @@ public class MedicamentDAO extends DAO<Medicament>{
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertMedicament.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				MedicamentDAO.connect.prepareStatement(sqlInsertMedicament.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
 			preparedStatement.setInt(1, obj.getCatId());
 			preparedStatement.setString(2, obj.getMedNom());
@@ -159,9 +157,9 @@ public class MedicamentDAO extends DAO<Medicament>{
 	}
 
 	@Override
-	public List<Medicament> findAll() throws MonException {
+	public ArrayList<Medicament> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Medicament> medicaments = new ArrayList<>();
+	    ArrayList<Medicament> medicaments = new ArrayList<>();
 
 	    StringBuilder sqlSelectAllMedicaments = new StringBuilder();
 	    sqlSelectAllMedicaments.append("select * from MEDICAMENT");

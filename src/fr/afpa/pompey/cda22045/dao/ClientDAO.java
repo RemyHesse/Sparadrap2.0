@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import fr.afpa.pompey.cda22045.exception.MonException;
 import fr.afpa.pompey.cda22045.metier.Client;
 
@@ -35,13 +33,13 @@ public class ClientDAO extends DAO<Client>{
 		
 		StringBuilder sqlInsertClient = new StringBuilder();
 		sqlInsertClient.append("insert into CLIENT ");
-		sqlInsertClient.append("(ADR_ID, CLI_NOM, CLI_PRENOM, CLI_TEL, CLI_EMAIL, MUT_ID, CLI_DATE_NAISS)" );
-		sqlInsertClient.append("values (?, ?, ?, ?, ?, ?, ?)");
+		sqlInsertClient.append("(ADR_ID, CLI_NOM, CLI_PRENOM, CLI_TEL, CLI_EMAIL, MUT_ID, CLI_DATE_NAISS, MED_ID)" );
+		sqlInsertClient.append("values (?, ?, ?, ?, ?, ?, ?, ?)");
 		
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertClient.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				ClientDAO.connect.prepareStatement(sqlInsertClient.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
 			preparedStatement.setInt(1,  obj.getAdresse() );
 			preparedStatement.setString(2, obj.getNom());
@@ -50,6 +48,7 @@ public class ClientDAO extends DAO<Client>{
 			preparedStatement.setString(5, obj.getEmail());
 			preparedStatement.setInt(6, obj.getMutId());
 			preparedStatement.setDate(7, Date.valueOf(obj.getCliDateNaiss()));
+			preparedStatement.setInt(8, obj.getMedId());
 			
 			
 			int rowCount = preparedStatement.executeUpdate();
@@ -106,7 +105,7 @@ public class ClientDAO extends DAO<Client>{
 
 	    StringBuilder sqlUpdateClient = new StringBuilder();
 	    sqlUpdateClient.append("update CLIENT set ADR_ID = ?, CLI_NOM = ?, CLI_PRENOM = ?, CLI_TEL = ?, CLI_EMAIL = ?,"
-	    		+ " MUT_ID = ?, CLI_DATE_NAISS = ? where CLI_ID = ?");
+	    		+ " MUT_ID = ?, CLI_DATE_NAISS = ?, MED_ID = ? where CLI_ID = ?");
 
 	    boolean requeteOk = false;
 
@@ -118,7 +117,9 @@ public class ClientDAO extends DAO<Client>{
 	        preparedStatement.setString(5, obj.getEmail());
 	        preparedStatement.setInt(6, obj.getMutId());
 	        preparedStatement.setDate(7, Date.valueOf(obj.getCliDateNaiss()));
-	        preparedStatement.setInt(8, obj.getPerId()); 
+	        preparedStatement.setInt(8, obj.getMedId());
+	        preparedStatement.setInt(9, obj.getPerId()); 
+	        
 
 	        int rowCount = preparedStatement.executeUpdate();
 
@@ -161,8 +162,9 @@ public class ClientDAO extends DAO<Client>{
 	            String email = resultSet.getString("CLI_EMAIL");
 	            int mutuelleId = resultSet.getInt("MUT_ID");
 	            Date dateNaissance = resultSet.getDate("CLI_DATE_NAISS");
+	            int medId = resultSet.getInt("MED_ID");
 
-	            client = new Client(clientId, prenom, nom, adresseId, telephone, email, mutuelleId, ((java.sql.Date) dateNaissance).toLocalDate());
+	            client = new Client(clientId, prenom, nom, adresseId, telephone, email, mutuelleId, ((java.sql.Date) dateNaissance).toLocalDate(), medId);
 	        }
 
 
@@ -175,9 +177,9 @@ public class ClientDAO extends DAO<Client>{
 	}
 
 	@Override
-	public List<Client> findAll() throws MonException {
+	public ArrayList<Client> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Client> clients = new ArrayList<>();
+	    ArrayList<Client> clients = new ArrayList<>();
 
 	    StringBuilder sqlSelectAllClients = new StringBuilder();
 	    sqlSelectAllClients.append("select * from CLIENT");
@@ -194,8 +196,9 @@ public class ClientDAO extends DAO<Client>{
 	            String email = resultSet.getString("CLI_EMAIL");
 	            int mutuelleId = resultSet.getInt("MUT_ID");
 	            Date dateNaissance = resultSet.getDate("CLI_DATE_NAISS");
+	            int medId = resultSet.getInt("MED_ID");
 
-	            Client client = new Client(clientId, nom, prenom, adresseId, telephone, email, mutuelleId, ((java.sql.Date) dateNaissance).toLocalDate());
+	            Client client = new Client(clientId, nom, prenom, adresseId, telephone, email, mutuelleId, ((java.sql.Date) dateNaissance).toLocalDate(), medId);
 	            clients.add(client);
 	        }
 

@@ -3,51 +3,53 @@
  */
 package fr.afpa.pompey.cda22045.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import fr.afpa.pompey.cda22045.exception.MonException;
-import fr.afpa.pompey.cda22045.metier.Categorie;
+import fr.afpa.pompey.cda22045.metier.Stock;
 
 /**
  * 
  */
-public class CategorieDAO extends DAO<Categorie> {
+public class StockDAO extends DAO<Stock>{
 
 	/**
 	 * 
 	 */
-	public CategorieDAO() {
+	public StockDAO() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public boolean create(Categorie obj) {
+	public boolean create(Stock obj) {
 		Singleton.getInstanceDB();
 		
-		StringBuilder sqlInsertCategorie = new StringBuilder();
-		sqlInsertCategorie.append("insert into CATEGORIE ");
-		sqlInsertCategorie.append("(CAT_LABEL)" );
-		sqlInsertCategorie.append("values (?)");
+		StringBuilder sqlInsertStock = new StringBuilder();
+		sqlInsertStock.append("insert into STOCK ");
+		sqlInsertStock.append("(STO_LIEUX)" );
+		sqlInsertStock.append("values (?, ?)");
 		
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				CategorieDAO.connect.prepareStatement(sqlInsertCategorie.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				DelivreDAO.connect.prepareStatement(sqlInsertStock.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
-			preparedStatement.setString(1,  obj.getCatLabel() );
+			preparedStatement.setString(1, obj.getStoLieux());
 
 			
 			
 			int rowCount = preparedStatement.executeUpdate();
 
-	        if (rowCount > 0) {
+			if (rowCount > 0) {
 	            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 	            if (generatedKeys.next()) {
 	                int generatedCliId = generatedKeys.getInt(1);
-	                obj.setCatId(generatedCliId);
+	                obj.setStoId(generatedCliId);
 	                requeteOk = true;
 	            }
 	        }
@@ -62,16 +64,16 @@ public class CategorieDAO extends DAO<Categorie> {
 	}
 
 	@Override
-	public boolean delete(Categorie obj) {
+	public boolean delete(Stock obj) {
 		Singleton.getInstanceDB();
 		
-	    StringBuilder sqlDeleteCategorie = new StringBuilder();
-	    sqlDeleteCategorie.append("delete from CATEGORIE where CAT_ID = ?");
+	    StringBuilder sqlDeleteStock = new StringBuilder();
+	    sqlDeleteStock.append("delete from STOCK where STO_ID = ?");
 
 	    boolean requeteOk = false;
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlDeleteCategorie.toString())) {
-	        preparedStatement.setInt(1, obj.getCatId());
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlDeleteStock.toString())) {
+	        preparedStatement.setInt(1, obj.getStoId());
 
 	        int rowCount = preparedStatement.executeUpdate();
 
@@ -89,17 +91,17 @@ public class CategorieDAO extends DAO<Categorie> {
 	}
 
 	@Override
-	public boolean update(Categorie obj) {
+	public boolean update(Stock obj) {
 	    Singleton.getInstanceDB();
 
-	    StringBuilder sqlUpdateCategorie = new StringBuilder();
-	    sqlUpdateCategorie.append("update CATEGORIE set CAT_LABEL = ?, where CAT_ID = ?");
+	    StringBuilder sqlUpdateStock = new StringBuilder();
+	    sqlUpdateStock.append("update STOCK set STO_LIEUX = ?, where STO_ID = ?");
 
 	    boolean requeteOk = false;
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateCategorie.toString())) {
-	    	preparedStatement.setString(1,  obj.getCatLabel() );
-	        preparedStatement.setInt(2, obj.getCatId()); 
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlUpdateStock.toString())) {
+	    	preparedStatement.setDate(1, Date.valueOf(obj.getStoLieux() ));
+	        preparedStatement.setInt(2, obj.getStoId()); 
 
 	        int rowCount = preparedStatement.executeUpdate();
 
@@ -117,25 +119,25 @@ public class CategorieDAO extends DAO<Categorie> {
 	}
 
 	@Override
-	public Categorie find(Integer pCatId) throws MonException {
+	public Stock find(Integer pId) throws MonException {
 		Singleton.getInstanceDB();
 		
-		Categorie categorie = null;
+		Stock stock = null;
 
-	    StringBuilder sqlSelectCategorie = new StringBuilder();
-	    sqlSelectCategorie.append("select * from CATEGORIE where CAT_ID = ?");
+	    StringBuilder sqlSelectStock = new StringBuilder();
+	    sqlSelectStock.append("select * from STOCK where STO_ID = ?");
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectCategorie.toString())) {
-	        preparedStatement.setInt(1, pCatId);
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectStock.toString())) {
+	        preparedStatement.setInt(1, pId);
 
 	        ResultSet resultSet = preparedStatement.executeQuery();
 
 	        if (resultSet.next()) {
 	           
-	            int catId = resultSet.getInt("CAT_ID");
-	            String catLabel = resultSet.getString("CAT_LABEL");
+	            int stoId = resultSet.getInt("STO_ID");
+	            String stoLieux = resultSet.getString("STO_LIEUX");
 	            
-	            categorie = new Categorie(catId, catLabel);
+	            stock = new Stock(stoId, stoLieux);
 	        }
 
 
@@ -144,26 +146,26 @@ public class CategorieDAO extends DAO<Categorie> {
 	                + " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
 	    }
 
-	    return categorie;
+	    return stock;
 	}
 
 	@Override
-	public ArrayList<Categorie> findAll() throws MonException {
+	public ArrayList<Stock> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    ArrayList<Categorie> categories = new ArrayList<>();
+	    ArrayList<Stock> stocks = new ArrayList<>();
 
-	    StringBuilder sqlSelectAllSpecialites = new StringBuilder();
-	    sqlSelectAllSpecialites.append("select * from CATEGORIE");
+	    StringBuilder sqlSelectAllStock = new StringBuilder();
+	    sqlSelectAllStock.append("select * from ORDONNANCE");
 
-	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectAllSpecialites.toString())) {
+	    try (PreparedStatement preparedStatement = connect.prepareStatement(sqlSelectAllStock.toString())) {
 	        ResultSet resultSet = preparedStatement.executeQuery();
 
 	        while (resultSet.next()) {
-	            int catId = resultSet.getInt("CAT_ID");
-	            String catLabel = resultSet.getString("CAT_LABEL");
+	            int stoId = resultSet.getInt("STO_ID");
+	            String stoLieux = resultSet.getString("STO_LIEUX");
 
-	            Categorie categorie = new Categorie(catId, catLabel);
-	            categories.add(categorie);
+	            Stock stock = new Stock(stoId, stoLieux);
+	            stocks.add(stock);
 	        }
 
 
@@ -172,7 +174,7 @@ public class CategorieDAO extends DAO<Categorie> {
 	                " [ code d'erreur SQL : " + sqle.getSQLState() + " ]");
 	    }
 
-	    return categories;
+	    return stocks;
 	}
 
 }

@@ -5,8 +5,7 @@ package fr.afpa.pompey.cda22045.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-
+import java.util.ArrayList;
 import fr.afpa.pompey.cda22045.metier.Personne;
 
 /**
@@ -32,7 +31,7 @@ public class PersonneDAO extends DAO<Personne>{
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement prepareStatement = 
-				this.connect.prepareStatement(sqlInsertPersonne.toString())	){
+				PersonneDAO.connect.prepareStatement(sqlInsertPersonne.toString())	){
 			
 			prepareStatement.setInt(1,  obj.getAdresse());
 			prepareStatement.setString(2, obj.getNom());
@@ -90,7 +89,7 @@ public class PersonneDAO extends DAO<Personne>{
 	}
 
 	@Override
-	public List<Personne> findAll() {
+	public ArrayList<Personne> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}

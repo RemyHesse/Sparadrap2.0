@@ -8,10 +8,8 @@ import java.awt.EventQueue;
 import javax.swing.UIManager;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
-import fr.afpa.pompey.cda22045.dao.Singleton;
 import fr.afpa.pompey.cda22045.exception.MonException;
 import fr.afpa.pompey.cda22045.frame.Accueil;
-import fr.afpa.pompey.cda22045.utilitaires.Debug;
 
 /**
  * 

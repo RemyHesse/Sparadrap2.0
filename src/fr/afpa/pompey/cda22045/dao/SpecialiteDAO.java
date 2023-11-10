@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import fr.afpa.pompey.cda22045.exception.MonException;
 import fr.afpa.pompey.cda22045.metier.Specialite;
 
@@ -28,7 +26,7 @@ public class SpecialiteDAO extends DAO<Specialite> {
 		boolean requeteOk = false;
 		
 		try ( PreparedStatement preparedStatement = 
-				this.connect.prepareStatement(sqlInsertSpecialite.toString(),Statement.RETURN_GENERATED_KEYS)	){
+				SpecialiteDAO.connect.prepareStatement(sqlInsertSpecialite.toString(),Statement.RETURN_GENERATED_KEYS)	){
 			
 			preparedStatement.setString(1,  obj.getSpeLabel() );
 
@@ -141,9 +139,9 @@ public class SpecialiteDAO extends DAO<Specialite> {
 	}
 
 	@Override
-	public List<Specialite> findAll() throws MonException {
+	public ArrayList<Specialite> findAll() throws MonException {
 	    Singleton.getInstanceDB();
-	    List<Specialite> specialites = new ArrayList<>();
+	    ArrayList<Specialite> specialites = new ArrayList<>();
 
 	    StringBuilder sqlSelectAllSpecialites = new StringBuilder();
 	    sqlSelectAllSpecialites.append("select * from SPECIALITE");
